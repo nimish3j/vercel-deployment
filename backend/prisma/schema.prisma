@@ -1,0 +1,73 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  SUPERADMIN
+  ADMIN
+  UPLOADER
+  VIEWER
+}
+
+enum ChildStatus {
+  ACTIVE
+  INACTIVE
+  ARCHIVED
+}
+
+enum DocumentStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model User {
+  id        String   @id @default(uuid())
+  username  String   @unique
+  password  String
+  role      UserRole @default(VIEWER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  documents Document[] @relation("UploadedBy")
+}
+
+model Child {
+  id           String      @id @default(uuid())
+  name         String
+  createdAt    DateTime    @default(now())
+  admissionDate DateTime
+  status       ChildStatus @default(ACTIVE)
+  updatedAt    DateTime    @updatedAt
+  
+  documents    Document[]
+}
+
+model Document {
+  id          String         @id @default(uuid())
+  childId     String
+  uploadedBy  String
+  status      DocumentStatus @default(PENDING)
+  url         String
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  
+  child       Child          @relation(fields: [childId], references: [id], onDelete: Cascade)
+  uploader    User           @relation("UploadedBy", fields: [uploadedBy], references: [id])
+}
+
+model Event {
+  id        String   @id @default(uuid())
+  title     String
+  date      DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
