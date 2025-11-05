@@ -1,5 +1,4 @@
-import { IsString, IsDateString, IsEnum, IsOptional } from 'class-validator';
-import { ChildStatus } from '@prisma/client';
+import { IsString, IsDateString, IsIn, IsOptional } from 'class-validator';
 
 export class CreateChildDto {
   @IsString()
@@ -8,8 +7,9 @@ export class CreateChildDto {
   @IsDateString()
   admissionDate: string;
 
-  @IsEnum(ChildStatus)
+  @IsString()
+  @IsIn(['ACTIVE', 'INACTIVE', 'ARCHIVED'])
   @IsOptional()
-  status?: ChildStatus;
+  status?: string;
 }
 

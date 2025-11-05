@@ -1,5 +1,4 @@
-import { IsString, IsEnum, IsUrl } from 'class-validator';
-import { DocumentStatus } from '@prisma/client';
+import { IsString, IsIn, IsUrl, IsOptional } from 'class-validator';
 
 export class CreateDocumentDto {
   @IsString()
@@ -8,7 +7,9 @@ export class CreateDocumentDto {
   @IsUrl()
   url: string;
 
-  @IsEnum(DocumentStatus)
-  status?: DocumentStatus;
+  @IsString()
+  @IsIn(['PENDING', 'APPROVED', 'REJECTED'])
+  @IsOptional()
+  status?: string;
 }
 

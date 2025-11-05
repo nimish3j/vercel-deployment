@@ -1,5 +1,4 @@
-import { IsString, MinLength, IsEnum, IsOptional } from 'class-validator';
-import { UserRole } from '@prisma/client';
+import { IsString, MinLength, IsIn, IsOptional } from 'class-validator';
 
 export class UpdateUserDto {
   @IsString()
@@ -12,8 +11,9 @@ export class UpdateUserDto {
   @IsOptional()
   password?: string;
 
-  @IsEnum(UserRole)
+  @IsString()
+  @IsIn(['SUPERADMIN', 'ADMIN', 'UPLOADER', 'VIEWER'])
   @IsOptional()
-  role?: UserRole;
+  role?: string;
 }
 
