@@ -33,14 +33,20 @@ function LoginForm() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || "Login failed");
+        const errorMessage = data.error || `Login failed (${response.status})`;
+        console.error('Login failed:', { status: response.status, error: data });
+        throw new Error(errorMessage);
       }
+
+      // Small delay to ensure cookie is set
+      await new Promise(resolve => setTimeout(resolve, 100));
 
       // Redirect to dashboard or the redirect URL
       const redirectUrl = searchParams.get("redirect") || "/dashboard";
       router.push(redirectUrl);
       router.refresh();
     } catch (err: any) {
+      console.error('Login error:', err);
       setError(err.message || "Login failed. Please try again.");
     } finally {
       setLoading(false);
