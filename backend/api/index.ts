@@ -64,7 +64,16 @@ export default async function handler(
   req: VercelRequest,
   res: VercelResponse,
 ): Promise<any> {
-  const serverlessHandler = await bootstrap();
-  return serverlessHandler(req, res);
+  try {
+    const serverlessHandler = await bootstrap();
+    return serverlessHandler(req, res);
+  } catch (error: any) {
+    console.error('Handler error:', error);
+    return res.status(500).json({
+      error: 'Internal server error',
+      message: error.message,
+      path: req.url,
+    });
+  }
 }
 
