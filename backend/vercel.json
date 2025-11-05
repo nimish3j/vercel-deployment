@@ -3,6 +3,12 @@
   "installCommand": "npm install",
   "buildCommand": "npm run vercel-build",
   "framework": null,
+  "builds": [
+    {
+      "src": "api/index.ts",
+      "use": "@vercel/node"
+    }
+  ],
   "rewrites": [
     {
       "source": "/(.*)",
